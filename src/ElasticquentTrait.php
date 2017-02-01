@@ -54,29 +54,6 @@ trait ElasticquentTrait
     protected $documentVersion = null;
 
     /**
-     * Sync Eloquent model changes to ElasticSearch
-     *
-     */
-    public static function bootElasticquentTrait()
-    {
-        $instance = new static;
-
-        if ($instance->getElasticConfig('sync')) {
-            static::created(function ($model) {
-                $model->addToIndex();
-            });
-
-            static::saved(function ($model) {
-                $model->reIndex();
-            });
-
-            static::deleted(function ($model) {
-                $model->removeFromIndex();
-            });
-        }
-    }
-
-    /**
      * New Collection
      *
      * @param array $models
@@ -657,7 +634,7 @@ trait ElasticquentTrait
         $items = $result['hits']['hits'];
         $instance = new static;
 
-        if ($instance->getElasticConfig('use_live')) {
+		if ($instance->getElasticConfig('use_live')) {
             return static::hydrateElasticquentResultLive($items, $meta = $result);
         } else {
             return static::hydrateElasticquentResult($items, $meta = $result);
